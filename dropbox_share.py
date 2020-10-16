@@ -61,11 +61,13 @@ class File:
 
 def UploadToDropBox(path):
     dp = DropBox(loadToken("token.txt"))
-    input_file = File(path)
-    zipFile = input_file.Zip()
-    dp.UploadFile(zipFile)
-    link = dp.GetLink(zipFile.GetName())
-    zipFile.Delete()
+    try:
+        input_file = File(path)
+        zipFile = input_file.Zip()
+        dp.UploadFile(zipFile)
+    finally:
+        link = dp.GetLink(zipFile.GetName())
+        zipFile.Delete()
     return link
 
 
@@ -76,7 +78,7 @@ def main():
     else:
         path = input("Input path\n>>> ")
         link = UploadToDropBox(path)
-    print(link)
+        print(link)
     pyperclip.copy(link)
     ctypes.windll.user32.MessageBoxW(0, "Upload done!", "Done", 1)
 
@@ -86,5 +88,5 @@ if __name__ == "__main__":
     try:
         main()
     except Exception as e:
-        print(e)
+        ctypes.windll.user32.MessageBoxW(0, str(e), "Error", 1)
         input("Press any key to continue...")
