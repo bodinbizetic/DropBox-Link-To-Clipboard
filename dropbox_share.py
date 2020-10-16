@@ -6,6 +6,7 @@ import shutil
 import zipfile
 import sys
 import pyperclip
+import ctypes
 
 token_path = "token.txt"
 
@@ -19,14 +20,14 @@ class File:
             raise PathDoesNotExists()
         self.path = path
 
-    
+
     def ReadBuffer(self):
         with open(self.path, "rb") as file:
             return file.read()
-    
+
     def GetName(self):
         return basename(self.path)
-    
+
     def Zip(self):
         if os.path.isdir(self.path):
             return self._ZipFolder()
@@ -45,12 +46,12 @@ class File:
         zipf.write(self.path)
         zipf.close()
         return File(name)
-    
+
     def _ZipFolder(self):
         new_path = os.path.split(self.path)[1]
         shutil.make_archive(new_path, 'zip', self.path)
         return File(new_path + ".zip")
-    
+
     def _DeleteFile(self):
         os.remove(self.path)
 
@@ -77,7 +78,13 @@ def main():
         link = UploadToDropBox(path)
     print(link)
     pyperclip.copy(link)
+    ctypes.windll.user32.MessageBoxW(0, "Upload done!", "Done", 1)
+
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as e:
+        print(e)
+        input("Press any key to continue...")
