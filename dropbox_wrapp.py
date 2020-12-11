@@ -7,7 +7,7 @@ class DropBox:
 
     def __init__(self, token):
         self.dropbox = dropbox.Dropbox(token)
-    
+
     def UploadFile(self, file):
         name = file.GetName()
         if name != "":

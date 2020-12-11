@@ -43,7 +43,7 @@ class File:
     def _ZipFile(self):
         name = os.path.split(os.path.splitext(self.path)[0])[1] + ".zip"
         zipf = zipfile.ZipFile(name, 'w', zipfile.ZIP_DEFLATED)
-        zipf.write(self.path)
+        zipf.write(self.path, os.path.basename(self.path))
         zipf.close()
         return File(name)
 
